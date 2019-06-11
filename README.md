@@ -82,3 +82,14 @@ python manage.py runserver 0:8000
 ```
 
 ### Code Structure ###
+
+
+
+### Useful Sites ###
+[https://danidee10.github.io/2018/01/10/realtime-django-4.html](https://danidee10.github.io/2018/01/10/realtime-django-4.html)
+[https://channels.readthedocs.io/en/latest/tutorial/part_2.html](https://channels.readthedocs.io/en/latest/tutorial/part_2.html)
+[django chat front end template](django chat front end template)
+
+
+
+
