@@ -8,37 +8,75 @@
 
 {% block content %}
 <div id="content">
-    <div class="container p-5">
-        <div class="_c_textbox_container">
-            <div class="_c_textbox_top_menu_container justify-content-between justify-content-center d-flex">
-                <a href="#" class="btn btn-outline-light m-2" id="close_btn">
-                    <img id="close_btn_img" class="btn_img" src="{% static 'icons/close.svg' %}" alt="Send">
-                </a>
-                <a href="#" class="btn btn-outline-light m-2" id="edit_btn">
-                    <img id="edit_btn_img" class="btn_img" src="{% static 'icons/close.svg' %}" alt="Send">
-                </a>
-                <a href="#" class="btn btn-outline-light m-2" id="delete_btn">
-                    <img id="delete_btn_img" class="btn_img" src="{% static 'icons/rubbish-bin.svg' %}" alt="Send">
-                </a>
-                <a href="#" class="btn btn-outline-light m-2" id="copy_btn">
-                    <img id="copy_btn_img" class="btn_img" src="{% static 'icons/copy-content.svg' %}" alt="Send">
-                </a>
-                <a href="#" class="btn btn-outline-light m-2" id="download_btn">
-                    <img id="download_btn_img" class="btn_img" src="{% static 'icons/download.svg' %}" alt="Send">
-                </a>
-                <a href="#" class="btn btn-outline-light m-2" id="status_indicator">
-                    <img id="status_indicator_img" class="btn_img" src="{% static 'icons/refresh-button.svg' %}" alt="Send">
-                </a>
-                <!-- <a href="#" class="btn btn-outline-light m-2" id="status_btn">
-                    <img id="delete_btn_img" class="btn_img" src="{% static 'icons/close.svg' %}" alt="Send">
-                </a> -->
+    <div id="content_container" class="container p-5">
+        <!-- ------------------ -->
+
+        <template id="_c_textbox_template">
+            <div class="_c_textbox_container" id="_c_textbox__${id}">
+                <div class="_c_textbox_top_menu_container justify-content-between justify-content-center d-flex">
+                    <a href="#" class="btn btn-outline-light no-border m-2" id="copy_btn_${id}">
+                        <img id="copy_btn_img_${id}" class="btn_img" src="{% static 'icons/brown/copy-content.svg' %}" alt="Copy">
+                    </a>
+                    <a href="#" class="btn btn-outline-light no-border m-2" id="download_btn_${id}">
+                        <img id="download_btn_img_${id}" class="btn_img" src="{% static 'icons/brown/download.svg' %}" alt="Download">
+                    </a>
+    
+                    <a href="#" class="btn btn-outline-light no-border m-2" id="delete_btn_${id}">
+                        <img id="delete_btn_img_${id}" class="btn_img" src="{% static 'icons/red/rubbish-bin.svg' %}" alt="Delete">
+                    </a>
+    
+                    <a href="#" class="btn btn-outline-light no-border m-2" id="status_indicator_${id}">
+                        <img id="status_indicator_img_${id}" class="btn_img" src="{% static 'icons/refresh-button.svg' %}" alt="Status">
+                    </a>
+                    <!-- <a href="#" class="btn btn-outline-light m-2" id="status_btn">
+                        <img id="delete_btn_img" class="btn_img" src="{% static 'icons/close.svg' %}" alt="Send">
+                    </a> -->
+                </div>
+
+                <div class="p-3 px-5">
+                    <div class="form-group m-0">
+                        <textarea name="text_area_${id}" id="text_area_${id}" class="w-100 br-3 text_area_style" rows=1></textarea>
+                    </div>
+                </div>
             </div>
-        </div>
+        </template>
+
+        <template id="_c_attachemntbox_template">
+
+            <div class="_c_attachemntbox_container" id="_c_attachemntbox__${id}">
+                <div class="_c_attachemntbox_top_menu_container justify-content-between justify-content-center d-flex">
+                    <a href="#" class="btn btn-outline-light no-border m-2" id="download_btn_${id}">
+                        <img id="download_btn_img_${id}" class="btn_img" src="{% static 'icons/brown/download.svg' %}" alt="Download">
+                    </a>
+    
+                    <a href="#" class="btn btn-outline-light no-border m-2" id="delete_btn_${id}">
+                        <img id="delete_btn_img_${id}" class="btn_img" src="{% static 'icons/red/rubbish-bin.svg' %}" alt="Delete">
+                    </a>
+    
+                    <a href="#" class="btn btn-outline-light no-border m-2" id="status_indicator_${id}">
+                        <img id="status_indicator_img_${id}" class="btn_img" src="{% static 'icons/refresh-button.svg' %}" alt="Status">
+                    </a>
+                    <!-- <a href="#" class="btn btn-outline-light m-2" id="status_btn">
+                        <img id="delete_btn_img" class="btn_img" src="{% static 'icons/close.svg' %}" alt="Send">
+                    </a> -->
+                </div>
+
+                <div class="p-3 px-5">
+                    <div class="form-group m-0">
+                        <input type="text" name="text_area_${id}" id="text_area_${id}" class="w-100 br-3 text_area_style" placeholder="filename.txt">
+                    </div>
+                </div>
+            </div>
+            
+        </template>
+
+        <!-- ------------------ -->
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
+    <script src="{% static 'basic_app/js/support_function.js' %}"></script>
+    <script src="{% static 'basic_app/js/template_objects.js' %}"></script>
     <script src="{% static 'basic_app/js/index.js' %}"></script>
-    <script src="{% static 'vendor/mustachejs/mustache.min.js' %}"></script>
 {% endblock %}
