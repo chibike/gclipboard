@@ -16,25 +16,12 @@ from basic_app import filters
 class IndexView(AccessMixin, View):
     @staticmethod
     def get(request):
-        if request.user.is_authenticated:
-            return redirect(reverse('dashboard'))
-        login_form = LoginForm
-        return render(request, 'basic_app/html/login.html', {'login_form': login_form, 'active_nav': 'index'})
+        data = dict()
+        return render(request, 'basic_app/html/index.html', data)
 
     def post(self, request):
-        login_form = LoginForm(request.POST)
-        if login_form.is_valid():
-            user = login_form.login()
-            if user is not None:
-                login(request, user)
-                redirect_uri = request.GET.get(self.get_redirect_field_name(), None)
-                if redirect_uri:
-                    return redirect(redirect_uri)
-                if user.is_superuser:
-                    return redirect(reverse('admin'))
-                else:
-                    return redirect(reverse('dashboard'))
-        return render(request, "basic_app/html/login.html", {'login_form': login_form, 'active_nav': 'index'})
+        data = dict()
+        return render(request, "basic_app/html/index.html", data)
 
 
 class ChangePasswordView(LoginRequiredMixin, View):

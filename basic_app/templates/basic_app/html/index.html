@@ -1,0 +1,44 @@
+{% extends "basic_app/html/includes/_chat_layout.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block header %}
+    <link href="{% static 'basic_app/css/index.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div id="content">
+    <div class="container p-5">
+        <div class="_c_textbox_container">
+            <div class="_c_textbox_top_menu_container justify-content-between justify-content-center d-flex">
+                <a href="#" class="btn btn-outline-light m-2" id="close_btn">
+                    <img id="close_btn_img" class="btn_img" src="{% static 'icons/close.svg' %}" alt="Send">
+                </a>
+                <a href="#" class="btn btn-outline-light m-2" id="edit_btn">
+                    <img id="edit_btn_img" class="btn_img" src="{% static 'icons/close.svg' %}" alt="Send">
+                </a>
+                <a href="#" class="btn btn-outline-light m-2" id="delete_btn">
+                    <img id="delete_btn_img" class="btn_img" src="{% static 'icons/rubbish-bin.svg' %}" alt="Send">
+                </a>
+                <a href="#" class="btn btn-outline-light m-2" id="copy_btn">
+                    <img id="copy_btn_img" class="btn_img" src="{% static 'icons/copy-content.svg' %}" alt="Send">
+                </a>
+                <a href="#" class="btn btn-outline-light m-2" id="download_btn">
+                    <img id="download_btn_img" class="btn_img" src="{% static 'icons/download.svg' %}" alt="Send">
+                </a>
+                <a href="#" class="btn btn-outline-light m-2" id="status_indicator">
+                    <img id="status_indicator_img" class="btn_img" src="{% static 'icons/refresh-button.svg' %}" alt="Send">
+                </a>
+                <!-- <a href="#" class="btn btn-outline-light m-2" id="status_btn">
+                    <img id="delete_btn_img" class="btn_img" src="{% static 'icons/close.svg' %}" alt="Send">
+                </a> -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'basic_app/js/index.js' %}"></script>
+    <script src="{% static 'vendor/mustachejs/mustache.min.js' %}"></script>
+{% endblock %}
