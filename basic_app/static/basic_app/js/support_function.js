@@ -21,3 +21,19 @@ function auto_resize()
         this.style.overflowY = "hidden";
     }
 }
+
+function add_class_to_view(view, class_name)
+{
+    if (!view.classList.contains("class_name"))
+    {
+        view.classList.add(class_name);
+    }
+}
+
+function remove_class_from_view(view, class_name)
+{
+    if (view.classList.contains("class_name"))
+    {
+        view.classList.remove(class_name);
+    }
+}

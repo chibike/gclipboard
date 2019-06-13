@@ -26,7 +26,7 @@
                     </a>
     
                     <a href="#" class="btn btn-outline-light no-border m-2" id="status_indicator_${id}">
-                        <img id="status_indicator_img_${id}" class="btn_img" src="{% static 'icons/refresh-button.svg' %}" alt="Status">
+                        <img id="status_indicator_img_${id}" class="btn_img" src="{% static 'icons/red/refresh-button.svg' %}" alt="Status">
                     </a>
                     <!-- <a href="#" class="btn btn-outline-light m-2" id="status_btn">
                         <img id="delete_btn_img" class="btn_img" src="{% static 'icons/close.svg' %}" alt="Send">
@@ -54,16 +54,15 @@
                     </a>
     
                     <a href="#" class="btn btn-outline-light no-border m-2" id="status_indicator_${id}">
-                        <img id="status_indicator_img_${id}" class="btn_img" src="{% static 'icons/refresh-button.svg' %}" alt="Status">
+                        <img id="status_indicator_img_${id}" class="btn_img loading_animation" src="{% static 'icons/red/refresh-button.svg' %}" alt="Status">
                     </a>
-                    <!-- <a href="#" class="btn btn-outline-light m-2" id="status_btn">
-                        <img id="delete_btn_img" class="btn_img" src="{% static 'icons/close.svg' %}" alt="Send">
-                    </a> -->
                 </div>
 
                 <div class="p-3 px-5">
                     <div class="form-group m-0">
-                        <input type="text" name="text_area_${id}" id="text_area_${id}" class="w-100 br-3 text_area_style" placeholder="filename.txt">
+                        <!-- <label for="text_area_${id}">Attachment</label> -->
+                        <input type="text" class="form-control" id="text_area_${id}" class="w-100 br-3 text_area_style" placeholder="Rename Attachment">
+                        <small id="text_area_help_${id}" class="form-text text-muted">attachment.txt</small>
                     </div>
                 </div>
             </div>

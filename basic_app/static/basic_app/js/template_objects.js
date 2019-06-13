@@ -37,6 +37,15 @@ class GenericContentBox
         this.id = id;
         this.delete_btn_id = `delete_btn_${this.id}`;
         this.status_indicator_id = `status_indicator_${this.id}`;
+        this.status_indicator_img_id = `status_indicator_img_${this.id}`;
+
+        this.states = {
+            UPLOADING : 1,
+            EDITING : 2,
+            SENT : 3
+        }
+
+        this.state = this.states.SENT;
     }
 
     onDelete()
@@ -47,6 +56,45 @@ class GenericContentBox
     setTemplate(template)
     {
         this.template = template.replace(/\${id}/g, this.id);
+    }
+
+    setState(state)
+    {
+        if (state === this.states.EDITING)
+        {
+            document.getElementById(this.status_indicator_img_id).src = "/static/icons/red/refresh-button.svg";
+
+            var status_indicator = document.getElementById(this.status_indicator_id);
+            remove_class_from_view(status_indicator, "disabled");
+            remove_class_from_view(status_indicator, "loading_animation");
+            remove_class_from_view(status_indicator, "full_opacity");
+
+            this.state = this.states.EDITING;
+        }
+        
+        else if (state === this.states.UPLOADING)
+        {
+            document.getElementById(this.status_indicator_img_id).src = "/static/icons/red/refresh-button.svg";
+
+            var status_indicator = document.getElementById(this.status_indicator_id);
+            add_class_to_view(status_indicator, "disabled");
+            add_class_to_view(status_indicator, "loading_animation");
+            add_class_to_view(status_indicator, "full_opacity");
+
+            this.state = this.states.UPLOADING;
+        }
+        else if (state === this.states.SENT)
+        {
+            document.getElementById(this.status_indicator_img_id).src = "/static/icons/green/dot.svg";
+
+            var status_indicator = document.getElementById(this.status_indicator_id);
+            remove_class_from_view(status_indicator, "loading_animation");
+
+            add_class_to_view(status_indicator, "disabled");
+            add_class_to_view(status_indicator, "full_opacity");
+
+            this.state = this.states.SENT;
+        }
     }
 
     appendToView(view)

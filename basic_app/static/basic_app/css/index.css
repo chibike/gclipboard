@@ -73,7 +73,7 @@
 
 ._c_attachemntbox_container
 {
-    background-color: rgb(7, 89, 212);
+    background-color: white;
 
     width: 100%;
     min-height: 60px;
@@ -88,6 +88,24 @@
     width: 100%;
     height: 54px;
 
-    background-color: #C2B8B2;
+    background-color: #9D8CA1;
     border-radius: 5px;
+}
+
+.loading_animation {
+    -webkit-animation: rotation 2s infinite linear;
+}
+
+.full_opacity
+{
+    opacity: 1.0 !important;
+}
+
+@-webkit-keyframes rotation {
+    from {
+            -webkit-transform: rotate(0deg);
+    }
+    to {
+            -webkit-transform: rotate(359deg);
+    }
 }

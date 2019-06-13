@@ -103,3 +103,7 @@ vaf.addContentBox(foo_2);
 vaf.addContentBox(foo_3);
 
 vaf.render();
+
+foo.setState(foo.states.SENT);
+foo_1.setState(foo.states.UPLOADING);
+foo_2.setState(foo.states.EDITING);
