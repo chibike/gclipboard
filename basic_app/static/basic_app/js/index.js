@@ -19,6 +19,7 @@ var content_container = document.getElementById("content_container");
 var view_manager = new ViewManager(content_container);
 
 var content_id = 0;
+var local_content_id = -1;
 
 send_btn.onmouseover = function()
 {
@@ -47,11 +48,6 @@ function replaceAll(str, find, replace)
 
 text_area.oninput = auto_resize;
 
-attachment_file.onselectionchange = function()
-{
-    // console.log
-}
-
 attach_btn.onclick = function()
 {
     attachment_file.click();
@@ -59,12 +55,9 @@ attach_btn.onclick = function()
 
 send_btn.onclick = function()
 {
-    if (!text_area.value)
-    {
-        return;
-    }
+    if (!text_area.value) { return; }
 
-    var text_content_box = new TextContentBox(content_id);
+    var text_content_box = new TextContentBox(local_content_id, view_manager);
     text_content_box.setTemplate(document.getElementById("_c_textbox_template").innerHTML);
 
     view_manager.addContentBox(text_content_box);
@@ -72,34 +65,92 @@ send_btn.onclick = function()
 
     view_manager.render();
     text_area.value = "";
-    content_id += 1;
+    local_content_id -= 1;
 
     view_manager.focus(0);
+
+    setTimeout(()=>{
+        text_content_box.upload.call(text_content_box)
+    }, 3000);
 }
 
-// var vaf = new ViewManager(content_container);
+attachment_file.addEventListener("change", ()=>{
+    const file_list = attachment_file.files;
 
-// var c_textbot_template = document.getElementById("_c_textbox_template");
-// var foo = new TextContentBox(0);
-// foo.setTemplate(c_textbot_template.innerHTML);
+    for (var i=0; i<file_list.length; i++)
+    {
+        var file = file_list[i];
 
-// var foo_1 = new TextContentBox(1);
-// foo_1.setTemplate(c_textbot_template.innerHTML);
+        if (!file.name){ return; }
 
-// var foo_2 = new TextContentBox(2);
-// foo_2.setTemplate(c_textbot_template.innerHTML);
+        var attachment_content_box = new AttachmentContentBox(local_content_id, view_manager);
+        attachment_content_box.setTemplate(document.getElementById("_c_attachmentbox_template").innerHTML);
 
-// var c_attachment_box_template = document.getElementById("_c_attachemntbox_template");
-// var foo_3 = new AttachmentContentBox(3);
-// foo_3.setTemplate(c_attachment_box_template.innerHTML);
+        view_manager.addContentBox(attachment_content_box);
+        attachment_content_box.setFile(file);
 
-// vaf.addContentBox(foo);
-// vaf.addContentBox(foo_1);
-// vaf.addContentBox(foo_2);
-// vaf.addContentBox(foo_3);
+        setTimeout(()=>{
+            attachment_content_box.upload.call(attachment_content_box)
+        }, 3000);
 
-// vaf.render();
+        local_content_id -= 1;
+    }
 
-// foo.setState(foo.states.SENT);
-// foo_1.setState(foo.states.UPLOADING);
-// foo_2.setState(foo.states.EDITING);
+    if (file_list.length > 0)
+    {
+        view_manager.render();
+    }
+
+    view_manager.focus(0);
+
+}, false);
+
+function load_content()
+{
+    post_data("/get_items/30", {}, (state, status, response)=>{
+
+        if (state == 4 && status == 200)
+        {
+            var json_data = JSON.parse(response);
+            if (!json_data.status){ return; }
+
+            view_manager.removeSentContent();
+
+            var items = json_data.items;
+            for (var i=0; i<items.length; i++)
+            {
+                var item = items[i];
+                var id = item.id;
+                var type = item.content_type;
+
+                if (type === "text")
+                {
+                    var text = item.text;
+                    var text_content_box = new TextContentBox(id, view_manager);
+
+                    text_content_box.setTemplate(document.getElementById("_c_textbox_template").innerHTML);
+                    view_manager.addContentBoxReverse(text_content_box);
+                    text_content_box.setText(text);
+
+                    text_content_box.state = text_content_box.states.SENT;
+
+                }
+                else if (type === "file")
+                {
+                    var filename = item.filename;
+                    var attachment_content_box = new AttachmentContentBox(id, view_manager);
+
+                    attachment_content_box.setTemplate(document.getElementById("_c_attachmentbox_template").innerHTML);
+                    view_manager.addContentBoxReverse(attachment_content_box);
+                    attachment_content_box.filename = filename;
+
+                    attachment_content_box.state = attachment_content_box.states.SENT;
+                }
+            }
+
+            view_manager.render();
+        }
+    })
+}
+
+setInterval(load_content, 5000);

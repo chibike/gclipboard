@@ -1,17 +1,60 @@
-from django.http import Http404
-from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
-from django.contrib.auth.models import User
-from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from django.http import JsonResponse, HttpResponse, FileResponse
 from django.shortcuts import render, redirect
-from django.urls import reverse
-from django.views import View
+from django.contrib.auth import login, logout
+from django.contrib.auth.models import User
 from django_tables2 import RequestConfig
+from django.urls import reverse
+from django.http import Http404
+from django.views import View
 
 from basic_app.forms import LoginForm, ChangePasswordForm, UserFilterFormHelper, NewUserForm
-from basic_app.tables import UserTable
 from basic_app import support_functions
+from basic_app.tables import UserTable
+from basic_app.models import Clipboard, TextContent, FileContent
 from basic_app import filters
+
+import json
+
+def add_text_to_clipboard(text):
+    text_content = TextContent(text=text)
+    text_content.save()
+
+    clipboard_item = Clipboard(text_content=text_content)
+    clipboard_item.save()
+
+    return True
+
+def add_file_to_clipboard(filename, file):
+    file_content = FileContent(file=file, filename=filename)
+    file_content.save()
+
+    clipboard_item = Clipboard(file_content=file_content)
+    clipboard_item.save()
+
+    return True
+
+def get_clipboard_items(howmany):
+    clipboard_items = Clipboard.objects.all().order_by("-time_stamp")[:howmany+1]
+
+    items = []
+    for c_item in clipboard_items:
+        json_data = {
+            "id" : c_item.id,
+            "content_type" : "text" if c_item.text_content else "file",
+            "time_stamp" : c_item.time_stamp
+        }
+
+        if json_data["content_type"] == "file":
+            json_data["filename"] = c_item.file_content.filename
+        else:
+            json_data["text"] = c_item.text_content.text
+
+        items.append(json_data)
+    
+    return items
 
 class IndexView(AccessMixin, View):
     @staticmethod
@@ -71,6 +114,183 @@ class AuthView(View):
     def post(request):
         logout(request)
         return redirect(reverse('index'))
+
+@method_decorator(csrf_exempt, name='dispatch')
+class UploadText(View):
+    @staticmethod
+    def get(request):
+        response = {
+            "status" : False
+        }
+
+        return JsonResponse(response)
+    
+    @staticmethod
+    def post(request):
+        response = {
+            "status" : False
+        }
+
+        try:
+            json_data = json.loads(request.body.decode("utf-8"))
+            response["status"] = add_text_to_clipboard(json_data["text"])
+        except:
+            pass
+
+        return JsonResponse(response)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class DownloadText(View):
+    @staticmethod
+    def get(request, id):
+        clipboard_item = Clipboard.objects.get(id=id)
+        text_content = clipboard_item.text_content
+
+        file = open("text.txt", "w")
+        file.write(text_content.text)
+        file.close()
+
+        response = FileResponse(open('text.txt', 'rb'), content_type="text/plain")
+        response['Content-Disposition'] = 'attachment; filename="text.txt"'
+        file.close()
+        return response
+    
+    @staticmethod
+    def post(request, id):
+        clipboard_item = Clipboard.objects.get(id=id)
+        text_content = clipboard_item.text_content
+        
+        with open("text.txt", "w") as f:
+            f.write(text_content.text)
+            response = FileResponse(f, content_type="text/plain")
+
+        response['Content-Disposition'] = 'attachment; filename="text.txt"'
+        return response
+
+@method_decorator(csrf_exempt, name='dispatch')
+class DeleteText(View):
+    @staticmethod
+    def get(request, id):
+        clipboard_item = Clipboard.objects.get(id=id)
+        text_content = clipboard_item.text_content
+        
+        clipboard_item.delete()
+        text_content.delete()
+
+        response = {
+            "status" : True
+        }
+
+        return JsonResponse(response)
+    
+    @staticmethod
+    def post(request, id):
+        clipboard_item = Clipboard.objects.get(id=id)
+        text_content = clipboard_item.text_content
+        
+        clipboard_item.delete()
+        text_content.delete()
+
+        response = {
+            "status" : True
+        }
+
+        return JsonResponse(response)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class DownloadFile(View):
+    @staticmethod
+    def get(request, id):
+        clipboard_item = Clipboard.objects.get(id=id)
+        file_content = clipboard_item.file_content
+        response = FileResponse(file_content.file)
+
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(file_content.filename)
+        return response
+    
+    @staticmethod
+    def post(request, id):
+        clipboard_item = Clipboard.objects.get(id=id)
+        file_content = clipboard_item.file_content
+        response = FileResponse(file_content.file)
+
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(file_content.filename)
+        return response
+
+@method_decorator(csrf_exempt, name='dispatch')
+class DeleteFile(View):
+    @staticmethod
+    def get(request, id):
+        clipboard_item = Clipboard.objects.get(id=id)
+        file_content = clipboard_item.file_content
+        
+        clipboard_item.delete()
+        file_content.delete()
+
+        response = {
+            "status" : True
+        }
+
+        return JsonResponse(response)
+    
+    @staticmethod
+    def post(request, id):
+        clipboard_item = Clipboard.objects.get(id=id)
+        file_content = clipboard_item.file_content
+        
+        clipboard_item.delete()
+        file_content.delete()
+
+        response = {
+            "status" : True
+        }
+
+        return JsonResponse(response)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class GetItems(View):
+    @staticmethod
+    def get(request):
+        response = {
+            "status" : False
+        }
+
+        return JsonResponse(response)
+    
+    @staticmethod
+    def post(request, howmany=30):
+        response = {
+            "status" : False
+        }
+
+        response["items"] = get_clipboard_items(howmany)
+        response["status"] = True
+
+        return JsonResponse(response)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class UploadFile(View):
+    @staticmethod
+    def get(request):
+        response = {
+            "status" : False
+        }
+
+        return JsonResponse(response)
+    
+    @staticmethod
+    def post(request):
+        response = {
+            "status" : False
+        }
+
+        filename = request.POST["filename"]
+        file = request.FILES["file"]
+
+        response["status"] = add_file_to_clipboard(filename, file)
+
+        return JsonResponse(response)
 
 class NewUserView(support_functions.TestIsSuperuser, View):
     @staticmethod

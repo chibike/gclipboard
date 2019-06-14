@@ -4,6 +4,7 @@
 
 {% block header %}
     <link href="{% static 'basic_app/css/index.css' %}" rel="stylesheet">
+    <link href="{% static 'basic_app/css/toast_message.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -40,10 +41,10 @@
     </div>
 </template>
 
-<template id="_c_attachemntbox_template">
+<template id="_c_attachmentbox_template">
 
-    <div class="_c_attachemntbox_container" id="_c_attachemntbox__${id}">
-        <div class="_c_attachemntbox_top_menu_container justify-content-between justify-content-center d-flex">
+    <div class="_c_attachmentbox_container" id="_c_attachmentbox__${id}">
+        <div class="_c_attachmentbox_top_menu_container justify-content-between justify-content-center d-flex">
             <a href="#" class="btn btn-outline-light no-border m-2" id="download_btn_${id}">
                 <img id="download_btn_img_${id}" class="btn_img" src="{% static 'icons/brown/download.svg' %}" alt="Download">
             </a>
@@ -60,8 +61,8 @@
         <div class="p-3 px-5">
             <div class="form-group m-0">
                 <!-- <label for="text_area_${id}">Attachment</label> -->
-                <input type="text" class="form-control" id="text_area_${id}" class="w-100 br-3 text_area_style" placeholder="Rename Attachment">
-                <small id="text_area_help_${id}" class="form-text text-muted">attachment.txt</small>
+                <input type="text" class="form-control" id="text_area_${id}" class="w-100 br-3 text_area_style" placeholder="Attachment">
+                <small id="text_area_help_${id}" class="form-text text-muted">rename attachment</small>
             </div>
         </div>
     </div>
@@ -71,6 +72,8 @@
 <!-- ------------------ -->
 
 <div id="content">
+    <div id="toast_messages_div" class="d-flex">
+    </div>
     <div id="content_container" class="container p-5">
     </div>
 </div>
@@ -78,6 +81,7 @@
 
 {% block scripts %}
     <script src="{% static 'basic_app/js/support_function.js' %}"></script>
+    <script src="{% static 'basic_app/js/toast_messages.js' %}"></script>
     <script src="{% static 'basic_app/js/template_objects.js' %}"></script>
     <script src="{% static 'basic_app/js/index.js' %}"></script>
 {% endblock %}

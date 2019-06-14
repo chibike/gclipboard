@@ -37,3 +37,22 @@ function remove_class_from_view(view, class_name)
         view.classList.remove(class_name);
     }
 }
+
+function copy_to_clipboard(text)
+{
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+  };
+
+function post_data(url, json_data, callback)
+{
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = ()=>{ callback(xhr.readyState, xhr.status, xhr.responseText); };
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(json_data));
+}

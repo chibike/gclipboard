@@ -20,7 +20,7 @@ ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', '10.20.1.85']
 
 INSTALLED_APPS = [
     'basic_app.apps.BasicAppConfig',
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -112,8 +112,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
 
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
