@@ -212,6 +212,11 @@ class GenericContentBox
 
             this.state = this.states.ERROR;
         }
+
+        if (this.state === this.states.SENT && this.id < 0)
+        {
+            this.view_manager.removeContentBox(this);
+        }
     }
 
     appendToView(view)
@@ -298,7 +303,10 @@ class TextContentBox extends GenericContentBox
     onDelete()
     {
         super.onDelete();
-        this.post_data(`/delete_text/${this.id}`, {});
+        if (this.id >= 0)
+        {
+            this.post_data(`/delete_text/${this.id}`, {});
+        }
     }
 
     onEdit()
@@ -420,7 +428,10 @@ class AttachmentContentBox extends GenericContentBox
     {
         super.onDelete();
 
-        this.post_data(`/delete_file/${this.id}`, {});
+        if (this.id >= 0)
+        {
+            this.post_data(`/delete_file/${this.id}`, {});
+        }
     }
 
     setState(state)

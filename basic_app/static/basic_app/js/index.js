@@ -153,4 +153,8 @@ function load_content()
     })
 }
 
-setInterval(load_content, 5000);
+setTimeout(()=>{
+    setInterval(load_content, 3000);
+}, 2000);
+
+load_content();

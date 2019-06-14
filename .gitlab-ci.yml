@@ -1,0 +1,44 @@
+image: docker:latest
+
+services:
+  - name: docker:dind
+    command: ["--insecure-registry=dev-gitlab.cryptoquantique.com:5555"]
+
+before_script:
+  - docker login -u "docker_login" -p $docker_login_token http://dev-gitlab.cryptoquantique.com:5555
+
+variables:
+  RELEASE_IMAGE: dev-gitlab.cryptoquantique.com:5555/crypto-team/cq-kms/aws_api_driver:latest
+  CONTAINER_NAME: gclipboard_docker
+  STAGING_IP: 10.20.1.26
+  PRODUCTION_IP: 10.20.1.27
+
+build:
+  stage: build
+  script:
+    - docker build -t $RELEASE_IMAGE .
+    - docker login -u "docker_login" -p $docker_login_token http://dev-gitlab.cryptoquantique.com:5555
+    - docker push $RELEASE_IMAGE
+
+staging:
+  stage: deploy
+  before_script:
+    - apk update && apk add openssh-client bash
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 700 ~/.ssh/id_rsa
+    - eval "$(ssh-agent -s)"
+    - ssh-add ~/.ssh/id_rsa
+    - ssh-keyscan -H '10.20.1.26' >> ~/.ssh/known_hosts
+    - ssh-copy-id adam@10.20.1.26
+
+  script:
+    - echo "Deploy to the staging server"
+    - ssh adam@$STAGING_IP "docker ps -aqf "name=$CONTAINER_NAME" | xargs -r docker stop"
+    - ssh adam@$STAGING_IP "docker ps -aqf "name=$CONTAINER_NAME" | xargs -r docker rm"
+    - ssh adam@$STAGING_IP "docker images -f "dangling=true" -q | xargs -r docker rmi"
+    - ssh adam@$STAGING_IP "docker images $RELEASE_IMAGE -q | xargs -r docker rmi"
+    - ssh adam@$STAGING_IP "docker pull $RELEASE_IMAGE"
+    - ssh adam@$STAGING_IP "docker run --name=$CONTAINER_NAME -d -p 9000:9000 $RELEASE_IMAGE"
+  only:
+    - master
