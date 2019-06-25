@@ -1,0 +1,35 @@
+{% load static %}
+<div id="bottom_navbar">
+    <nav class="navbar navbar-expand-lg fixed-bottom">
+        <div class="container">
+            <div class="row w-100">
+                <div class="col-sm-2 pb-0">
+                    <div class="text_area_control_btn_div h-100 p-0">
+                        <a href="#" class="btn btn-outline-light w-100" id="attach_btn">
+                            <img id="attach_btn_img" class="btn_img" src="{% static 'icons/add.svg' %}" alt="Attach">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-8 pb-0">
+                    <div class="form-group m-0">
+                        <!-- <label for="text_area">Text</label> -->
+                        <textarea name="text_area" id="text_area" class="w-100 br-3 text_area_style" rows=1></textarea>
+                    </div>
+                </div>
+                <div class="col-sm-2 pb-0">
+                    <div class="text_area_control_btn_div h-100 p-0">
+                        <a href="#" class="btn btn-outline-light w-100" id="send_btn">
+                            <img id="send_btn_img" class="btn_img" src="{% static 'icons/send-button.svg' %}" alt="Send">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <input type="file" name="attachment_file" id="attachment_file" hidden=true class="d-none" multiple>
+
+    <script>
+        
+    </script>
+</div>

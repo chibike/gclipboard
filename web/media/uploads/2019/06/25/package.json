@@ -1,0 +1,24 @@
+{
+  "name": "cq_app",
+  "productName": "Crypto Quantique - Demo",
+  "version": "1.0.0",
+  "description": "Launches cq in chrome",
+  "requested-execution-level": "requireAdministrator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Hello, world\"",
+    "start": "electron ."
+  },
+  "author": "Chibuike Okpaluba",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "child_process": "^1.0.2",
+    "jquery": "^3.4.1",
+    "popper.js": "^1.15.0"
+  },
+  "devDependencies": {
+    "electron": "^5.0.3",
+    "electron-packager": "^13.1.1"
+  }
+}

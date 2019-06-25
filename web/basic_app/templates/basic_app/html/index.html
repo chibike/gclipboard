@@ -1,0 +1,143 @@
+{% extends "basic_app/html/includes/_chat_layout.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block header %}
+    <link href="{% static 'basic_app/css/index.css' %}" rel="stylesheet">
+    <link href="{% static 'basic_app/css/toast_message.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<!-- ------------------ -->
+
+<div id="modal" class="custom_modal">
+    <div class="custom_modal-content">
+        <div class="custom_modal-header">
+            <b><span id="modal_title">Modal title</span></b>
+            <button type="button" class="close" id="modal_top_close_button"> <span>&times;</span> </button>
+        </div>
+        <div class="custom_modal-body justify-content-center text-center" id="modal_body">
+            <img class="mb-3 mt-3" src="{% static 'icons/loading.gif' %}" style="width: 100px;" id="loading_gif">
+        </div>
+        <div class="custom_modal-footer" id="modal_footer">
+            <div class="row">
+                <div class="col-md-4 col-sm-4"></div>
+                <div class="col-md-4 col-sm-4">
+                    <button type="button" class="btn btn-outline-danger w-100" id="modal_btn_cancel">Cancel</button>
+                </div>
+
+                <div class="col-md-4 col-sm-4">
+                    <button type="button" class="btn btn-outline-primary w-100" id="modal_btn_ok">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<template id="_s_shareable_info_form">
+    <div class="text-left mt-3 mb-5">
+        <div class="form-group d-none">
+            <label for="${content_id}">Content id</label>
+            <input type="number" class="form-control" name="${content_id}" id="${content_id}" min=0>
+        </div>
+
+        <div class="form-group">
+            <label for="${content_name}">Content name</label>
+            <input type="text" class="form-control" name="${content_name}" id="${content_name}">
+        </div>
+    
+        <div class="form-group">
+            <label for="${expiry_date}">Expiry date</label>
+            <input type="date" class="form-control" name="${expiry_date}" id="${expiry_date}">
+        </div>
+    
+        <div class="form-group">
+            <label for="${download_limit}">Download limit</label>
+            <input type="number" class="form-control" name="${download_limit}" id="${download_limit}" min=1 value="5" placeholder="Enter Maximum Download Limit">
+        </div>
+    </div>
+</template>
+
+
+<template id="_c_textbox_template">
+    <div class="_c_textbox_container" id="_c_textbox__${id}">
+        <div class="_c_textbox_top_menu_container justify-content-between justify-content-center d-flex">
+            <a href="#" class="btn btn-outline-light no-border m-2" id="copy_btn_${id}">
+                <img id="copy_btn_img_${id}" class="btn_img" src="{% static 'icons/brown/copy-content.svg' %}" alt="Copy">
+            </a>
+            
+            <a href="#" class="btn btn-outline-light no-border m-2" id="download_btn_${id}">
+                <img id="download_btn_img_${id}" class="btn_img" src="{% static 'icons/brown/download.svg' %}" alt="Download">
+            </a>
+
+            <a href="#" class="btn btn-outline-light no-border m-2" id="share_btn_${id}">
+                <img id="share_btn_img_${id}" class="btn_img" src="{% static 'icons/brown/share.svg' %}" alt="Share">
+            </a>
+
+            <a href="#" class="btn btn-outline-light no-border m-2" id="delete_btn_${id}">
+                <img id="delete_btn_img_${id}" class="btn_img" src="{% static 'icons/red/rubbish-bin.svg' %}" alt="Delete">
+            </a>
+
+            <a href="#" class="btn btn-outline-light no-border m-2" id="status_indicator_${id}">
+                <img id="status_indicator_img_${id}" class="btn_img" src="{% static 'icons/red/refresh-button.svg' %}" alt="Status">
+            </a>
+        </div>
+
+        <div class="p-3 px-5">
+            <div class="form-group m-0">
+                <textarea name="text_area_${id}" id="text_area_${id}" class="w-100 br-3 text_area_style" rows=1></textarea>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="_c_attachmentbox_template">
+
+    <div class="_c_attachmentbox_container" id="_c_attachmentbox__${id}">
+        <div class="_c_attachmentbox_top_menu_container justify-content-between justify-content-center d-flex">
+            <a href="#" class="btn btn-outline-light no-border m-2" id="download_btn_${id}">
+                <img id="download_btn_img_${id}" class="btn_img" src="{% static 'icons/brown/download.svg' %}" alt="Download">
+            </a>
+
+            <a href="#" class="btn btn-outline-light no-border m-2" id="share_btn_${id}">
+                <img id="share_btn_img_${id}" class="btn_img" src="{% static 'icons/brown/share.svg' %}" alt="Share">
+            </a>
+
+            <a href="#" class="btn btn-outline-light no-border m-2" id="delete_btn_${id}">
+                <img id="delete_btn_img_${id}" class="btn_img" src="{% static 'icons/red/rubbish-bin.svg' %}" alt="Delete">
+            </a>
+
+            <a href="#" class="btn btn-outline-light no-border m-2" id="status_indicator_${id}">
+                <img id="status_indicator_img_${id}" class="btn_img" src="{% static 'icons/red/refresh-button.svg' %}" alt="Status">
+            </a>
+        </div>
+
+        <div class="p-3 px-5">
+            <div class="form-group m-0">
+                <!-- <label for="text_area_${id}">Attachment</label> -->
+                <input type="text" class="form-control" id="text_area_${id}" class="w-100 br-3 text_area_style" placeholder="Attachment">
+                <small id="text_area_help_${id}" class="form-text text-muted">rename attachment</small>
+            </div>
+        </div>
+    </div>
+    
+</template>
+
+<!-- ------------------ -->
+
+<div id="content">
+    <div id="toast_messages_div" class="d-flex">
+    </div>
+    <div id="content_container" class="container p-5">
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'basic_app/js/support_function.js' %}"></script>
+    <script src="{% static 'basic_app/js/modal_handler.js' %}"></script>
+    <script src="{% static 'basic_app/js/toast_messages.js' %}"></script>
+    <script src="{% static 'basic_app/js/template_objects.js' %}"></script>
+    <script src="{% static 'basic_app/js/index.js' %}"></script>
+{% endblock %}
