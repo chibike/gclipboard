@@ -2,13 +2,13 @@ image: docker:latest
 
 services:
   - name: docker:dind
-    command: ["--insecure-registry=dev-gitlab.cryptoquantique.com:5555"]
+    command: ["--insecure-registry=dev-gitlab.com"]
 
 before_script:
-  - docker login -u "docker_login" -p $docker_login_token http://dev-gitlab.cryptoquantique.com:5555
+  - docker login -u "docker_login" -p $docker_login_token http://dev-gitlab.com
 
 variables:
-  RELEASE_IMAGE: dev-gitlab.cryptoquantique.com:5555/crypto-team/cq-kms/aws_api_driver:latest
+  RELEASE_IMAGE: dev-gitlab.com/crypto-team/cq-kms/aws_api_driver:latest
   CONTAINER_NAME: gclipboard_docker
   STAGING_IP: 10.20.1.26
   PRODUCTION_IP: 10.20.1.27
@@ -17,7 +17,7 @@ build:
   stage: build
   script:
     - docker build -t $RELEASE_IMAGE .
-    - docker login -u "docker_login" -p $docker_login_token http://dev-gitlab.cryptoquantique.com:5555
+    - docker login -u "docker_login" -p $docker_login_token http://dev-gitlab.com
     - docker push $RELEASE_IMAGE
 
 staging:
