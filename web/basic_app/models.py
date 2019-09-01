@@ -66,6 +66,17 @@ def auto_delete_file_on_delete(sender, instance, **kwargs):
         if os.path.isfile(instance.file.path):
             os.remove(instance.file.path)
 
+            # remove folder if empty
+            dir_name = os.path.abspath(os.path.join(instance.file.path, os.pardir))
+            if os.path.exists(dir_name) and os.path.isdir(dir_name):
+                if not os.listdir(dir_name):
+                    try:
+                        os.rmdir(dir_name)
+                    except OSError: # path is not empty
+                        # to force delete
+                        # shutil.rmtree(dir_name)
+                        pass
+
 @receiver(models.signals.pre_save, sender=FileContent)
 def auto_delete_file_on_change(sender, instance, **kwargs):
 
@@ -85,3 +96,14 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
     if not old_file == new_file:
         if os.path.isfile(old_file.path):
             os.remove(old_file.path)
+
+            # remove folder if empty
+            dir_name = os.path.abspath(os.path.join(old_file.path, os.pardir))
+            if os.path.exists(dir_name) and os.path.isdir(dir_name):
+                if not os.listdir(dir_name):
+                    try:
+                        os.rmdir(dir_name)
+                    except OSError: # path is not empty
+                        # to force delete
+                        # shutil.rmtree(dir_name)
+                        pass
