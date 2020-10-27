@@ -2,7 +2,7 @@ amqp==2.3.2
 asn1crypto==0.24.0
 billiard==3.5.0.4
 cffi==1.11.5
-cryptography==2.3
+cryptography==3.2
 Django==2.1.7
 django-crispy-forms==1.7.2
 django-filter==2.0.0
